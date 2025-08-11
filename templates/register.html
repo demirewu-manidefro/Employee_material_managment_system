@@ -1,0 +1,168 @@
+<!-- templates/register.html -->
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Register</title>
+        <style>
+        :root {
+    --bg-color: #1f242d;
+    --main-color: #7cf03d;
+    --text-color: #ffffff;
+}
+
+body {
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    font-family: Arial, sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+}
+
+.container {
+    background-color: #2c303a;
+    padding: 30px;
+    border-radius: 20px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+    width: 90%;
+    max-width: 400px;
+}
+
+h1, h2 {
+    text-align: center;
+    margin-bottom: 30px;
+    color: var(--main-color);
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+}
+
+label {
+    margin-bottom: 5px;
+    font-weight: bold;
+}
+select{
+  padding:15px;
+  border-radius: 10px;
+}
+input[type="text"],
+input[type="password"] {
+    padding: 10px;
+    margin-bottom: 20px;
+    border: none;
+    border-radius: 10px;
+    outline: none;
+}
+
+button {
+    background-color: var(--main-color);
+    color: black;
+    padding: 15px;
+    border: none;
+    border-radius: 12px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background 0.3s ease, transform 0.2s;
+}
+
+button:hover {
+    background-color: transparent;
+    color: var(--main-color);
+    border: 2px solid var(--main-color);
+    transition: all 0.3s ease;
+}
+
+a {
+    color: var(--main-color);
+    text-decoration: none;
+    text-align: center;
+    display: block;
+    margin-top: 15px;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+.flash {
+    text-align: center;
+    margin-top: 20px;
+    color: yellow;
+}
+
+ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+ul li.error {
+    color: #ff6b6b;
+}
+
+ul li.success {
+    color: #7cf03d;
+}
+.regster{
+   display: block;
+            background-color: var(--main-color);
+            color: black;
+            text-decoration: none;
+            text-align: center;
+            padding: 15px;
+            border-radius: 12px;
+            font-weight: bold;
+            transition: background 1s ease, transform 0.2s;
+}
+.regster:hover{
+   background-color: transparent;
+    color: var(--main-color);
+    border: 2px solid var(--main-color);
+    transition: all 0.5s ease;
+    cursor: pointer;
+    box-shadow: 0 0 20px rgba(223, 22, 152, 0.5);
+} 
+
+    </style>
+</head>
+<body>
+  <div class="container">
+    {% with messages = get_flashed_messages() %}
+    {% if messages %}
+      <div class="flash">
+         <ul>
+        {% for message in messages %}
+          <li>{{ message }}</li>
+        {% endfor %}
+      </ul>
+      </div>
+     
+    {% endif %}
+  {% endwith %}
+       <h2>Register</h2>
+  <form method="POST" action="{{ url_for('register') }}">
+    <label>Username:</label><br>
+    <input type="text" name="username" required><br>
+    
+    <label>Password:</label><br>
+    <input type="password" name="password" required><br>
+    
+    <label>Role:</label><br>
+    <select name="role" required>
+      <option value="admin">Admin</option>
+      <option value="supervisor">Supervisor</option>
+      <option value="viewer">Viewer</option>
+    </select><br><br>
+    
+    <input class="regster" type="submit" value="Register">
+  </form>
+
+  
+  </div>
+
+ 
+</body>
+</html>

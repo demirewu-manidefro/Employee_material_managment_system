@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Waiting for Return List</title>
+     <style>
+        body {
+            background: linear-gradient(to right, black, green);
+            font-family: Arial, sans-serif;
+            color: white;
+            margin: 0;
+            padding: 0;
+            text-align: center;
+        }
+
+        h1 {
+            margin-top: 30px;
+            font-size: 36px;
+        }
+
+        a {
+            color: #ffffff;
+            text-decoration: none;
+            font-weight: bold;
+            margin-bottom: 20px;
+            display: inline-block;
+        }
+
+        table {
+            margin: 30px auto;
+            border-collapse: collapse;
+            width: 95%;
+            background-color: white;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.6);
+            border-radius: 12px;
+            overflow: hidden;
+            color: black;
+        }
+
+        th, td {
+            padding: 12px 20px;
+            border-bottom: 1px solid #ddd;
+            text-align: center;
+        }
+
+        th {
+            background-color: #2f4f2f;
+            color: white;
+        }
+
+        tr:hover {
+            background-color: #f2f2f2;
+        }
+
+        ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        li {
+            margin-bottom: 4px;
+        }
+
+        button {
+            padding: 6px 10px;
+            margin: 3px;
+            background-color: green;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            box-shadow: 0 3px 6px rgba(0, 0, 0, 0.3);
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #005700;
+        }
+
+        .flash-messages {
+            margin: 15px auto;
+            width: 80%;
+        }
+
+        .flash-messages ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .flash-messages li {
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+               a{
+  display: inline-block;
+  background-color: white;
+  color: black;
+  font-weight: 700;
+  padding: 12px 25px;
+  border-radius: 10px;
+  text-decoration: none;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  margin-top: 20px;
+  text-align: center;
+  min-width: 160px;
+}
+
+a:hover {
+ background-color: transparent;
+  color: var(--main-color);
+  border: 2px solid white;
+}
+.table-container {
+    overflow-x: auto;
+    width: 100%;
+}
+
+@media screen and (max-width: 768px) {
+    table {
+        width: 100%;
+        font-size: 14px;
+    }
+
+    th, td {
+        padding: 10px;
+        white-space: nowrap;
+    }
+
+    button {
+        padding: 5px 8px;
+        font-size: 13px;
+    }
+
+    a {
+        padding: 10px 20px;
+        font-size: 14px;
+    }
+}
+
+    </style>
+</head>
+<body >
+    <h1>Employees Waiting to Return Materials</h1>
+    <div class="table-container">
+        <table border="1" cellpadding="5" cellspacing="0">
+        <thead>
+            <tr>
+                <th>Employee ID</th>
+                <th>Name</th>
+                <th>Father Name</th>
+                <th>grand_father_name</th>
+                <th>Sex</th>
+                <th>Position</th>
+                <th>Employment Status</th>
+                <th>Phone Number</th>
+                <th>Added Date</th>
+                <th>project</th>
+                <th>Actions</th>
+
+            </tr>
+        </thead>
+       <tbody>
+    {% for w in waiting_list %}
+        
+        <tr>
+            <td>{{ w.id }}</td>
+            <td>{{ w.name }}</td>
+            <td>{{ w.father_name }}</td>
+            <td>{{w.grand_father_name}}</td>
+            <td>{{w.sex}}</td/>
+            
+            <td>{{ w.position }}</td>
+            <td>{{ w.employment_status }}</td>
+            <td>{{ w.phone_number }}</td>
+            <td>{{ w.added_date.strftime('%Y-%m-%d') }}</td>
+            <td>{{w.project}}</td>
+
+            <td>
+                <form action="{{ url_for('remove_from_waiting', emp_id=w.id) }}" method="POST" style="display:inline;">
+                    <button type="submit">Remove</button>
+                </form>
+            </td>
+        </tr>
+    
+    {% endfor %}
+</tbody>
+
+    </table> 
+    </div>
+        
+
+    <br>
+    <a href="{{ url_for('home') }}">Back to Dashboard</a>
+</body>
+</html>

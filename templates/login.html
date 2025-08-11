@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Login</title>
+    <style>
+        :root {
+    --bg-color: #1f242d;
+    --main-color: #7cf03d;
+    --text-color: #ffffff;
+}
+
+body {
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    font-family: Arial, sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+}
+
+.container {
+    background-color: #2c303a;
+    padding: 30px;
+    border-radius: 20px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+    width: 90%;
+    max-width: 400px;
+}
+
+h1, h2 {
+    text-align: center;
+    margin-bottom: 30px;
+    color: var(--main-color);
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+}
+
+label {
+    margin-bottom: 5px;
+    font-weight: bold;
+}
+
+input[type="text"],
+input[type="password"] {
+    padding: 10px;
+    margin-bottom: 20px;
+    border: none;
+    border-radius: 10px;
+    outline: none;
+}
+
+button {
+    background-color: var(--main-color);
+    color: black;
+    padding: 15px;
+    border: none;
+    border-radius: 12px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background 0.3s ease, transform 0.2s;
+}
+
+button:hover {
+    background-color: transparent;
+    color: var(--main-color);
+    border: 2px solid var(--main-color);
+    transition: all 0.3s ease;
+}
+.regster{
+    background-color: var(--main-color);
+    color: black;
+    padding: 15px;
+    border: none;
+    border-radius: 12px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background 0.3s ease, transform 0.2s;
+}
+.regster:hover{
+    background-color: transparent;
+    color: var(--main-color);
+    border: 2px solid var(--main-color);
+    transition: all 0.3s ease;
+    text-decoration: none;
+}
+
+a{
+    color: var(--main-color);
+    text-decoration: none;
+    text-align: center;
+    display: block;
+    margin-top: 15px;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+.flash {
+    text-align: center;
+    margin-bottom: 20px;
+    color: yellow;
+}
+
+ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+ul li.error {
+    color: #ff6b6b;
+}
+
+ul li.success {
+    color: #7cf03d;
+}
+
+    </style>
+</head>
+<body>
+    <div class="container">
+        {% if current_user.is_authenticated %}
+        <p>You are logged in as {{ current_user.username }} ({{ current_user.role }}).</p>
+        <a href="{{ url_for('logout') }}"><button type="button">Logout</button></a>
+        {% endif %}
+
+        <h2>Login</h2>
+        {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            <ul>
+            {% for category, message in messages %}
+                    <li class="{{ category }}">{{ message }}</li>
+                    {% endfor %}
+            </ul>
+            {% endif %}
+        {% endwith %}
+
+        <form method="POST">
+            <label>Username</label>
+            <input type="text" name="username" required><br>
+            <label>Password</label>
+            <input type="password" name="password" required><br>
+            <button type="submit">Login</button>
+        </form>
+        <p> <a href="{{ url_for('register') }}" class="regster">Register</a></p>
+        <a href="{{ url_for('change_password') }}">
+        <button type="button">Change Password</button>
+        </a>
+    </div>
+
+</body>
+</html>

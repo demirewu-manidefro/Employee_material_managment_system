@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Upload Employees</title>
+      <style>
+          :root {
+  --bg-color: #1f242d;
+  --main-color: #7cf03d;
+  --text-color: #f1f1f1;
+  --input-bg: #fff; /* White input background */
+  --input-text-color: #000; /* Black text inside input */
+}
+
+body {
+  background-color: var(--bg-color);
+  color: var(--text-color);
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  margin: 0;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+h1 {
+  margin-bottom: 25px;
+  font-weight: 700;
+  font-size: 2rem;
+}
+
+form {
+  background-color: #2a2f3a;
+  padding: 25px 30px;
+  border-radius: 12px;
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
+  min-width: 320px;
+  max-width: 400px;
+  width: 100%;
+}
+
+label {
+  display: block;
+  margin-bottom: 6px;
+  font-weight: 600;
+}
+
+input[type="text"],
+select {
+  width: 100%;
+  padding: 10px 12px;
+  margin-bottom: 18px;
+  border-radius: 8px;
+  border: 1.8px solid #444c5a;
+  background-color: var(--input-bg);
+  color: var(--input-text-color);
+  font-size: 1rem;
+  box-sizing: border-box;
+  transition: border-color 0.3s ease;
+}
+
+input[type="text"]:focus,
+select:focus {
+  outline: none;
+  border-color: var(--main-color);
+  box-shadow: 0 0 6px var(--main-color);
+}
+
+button {
+  background-color: var(--main-color);
+  border: none;
+  border-radius: 10px;
+  padding: 12px 25px;
+  font-weight: 700;
+  font-size: 1.1rem;
+  color: #000;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  width: 100%;
+}
+
+button:hover {
+  background-color: transparent;
+  color: var(--main-color);
+  border: 2px solid var(--main-color);
+}
+
+
+
+/* Flash message styles */
+ul {
+  list-style: none;
+  padding: 0;
+  margin-bottom: 20px;
+}
+
+ul li {
+  font-weight: 600;
+  font-size: 0.95rem;
+  margin-bottom: 8px;
+}
+a{
+  display: inline-block;
+  background-color: var(--main-color);
+  color: #000;
+  font-weight: 700;
+  padding: 12px 25px;
+  border-radius: 10px;
+  text-decoration: none;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  margin-top: 20px;
+  text-align: center;
+  min-width: 160px;
+}
+
+input[type="text"]:focus,
+select:focus {
+  outline: none;
+  border-color: var(--main-color);
+  box-shadow: 0 0 6px var(--main-color);
+}
+
+a:hover {
+ background-color: transparent;
+  color: var(--main-color);
+  border: 2px solid var(--main-color);
+}
+
+    </style>
+</head>
+<body>
+    <h1>Upload Employees via Excel or CSV</h1>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        <ul>
+          {% for category, message in messages %}
+            <li style="color: {% if category == 'error' %}red{% else %}green{% endif %};">{{ message }}</li>
+          {% endfor %}
+        </ul>
+      {% endif %}
+    {% endwith %}
+
+    <form action="{{ url_for('upload_employees') }}" method="POST" enctype="multipart/form-data">
+        <input type="file" name="file" accept=".csv,.xlsx" required><br><br>
+        <button type="submit">Upload</button>
+    </form>
+
+    <br>
+    <a href="{{ url_for('home') }}">Back to Dashboard</a>
+</body>
+</html>

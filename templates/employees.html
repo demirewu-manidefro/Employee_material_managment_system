@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>All Employees</title>
+    <style>
+        body {
+            background: linear-gradient(to right, black, green);
+            font-family: Arial, sans-serif;
+            color: white;
+            margin: 0;
+            padding: 0;
+            text-align: center;
+        }
+
+        h1 {
+            margin-top: 30px;
+            font-size: 36px;
+        }
+
+        a {
+            color: #ffffff;
+            text-decoration: none;
+            font-weight: bold;
+            margin-bottom: 20px;
+            display: inline-block;
+        }
+
+        table {
+            margin: 30px auto;
+            border-collapse: collapse;
+            width: 95%;
+            background-color: white;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.6);
+            border-radius: 12px;
+            overflow: hidden;
+            color: black;
+        }
+
+        th, td {
+            padding: 12px 20px;
+            border-bottom: 1px solid #ddd;
+            text-align: center;
+        }
+
+        th {
+            background-color: #2f4f2f;
+            color: white;
+        }
+
+        tr:hover {
+            background-color: #f2f2f2;
+        }
+
+        ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        li {
+            margin-bottom: 4px;
+        }
+
+        button {
+            padding: 6px 10px;
+            margin: 3px;
+            background-color: green;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            box-shadow: 0 3px 6px rgba(0, 0, 0, 0.3);
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #005700;
+        }
+
+        .flash-messages {
+            margin: 15px auto;
+            width: 80%;
+        }
+
+        .flash-messages ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .flash-messages li {
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+               a{
+  display: inline-block;
+  background-color: white;
+  color: black;
+  font-weight: 700;
+  padding: 12px 25px;
+  border-radius: 10px;
+  text-decoration: none;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  margin-top: 20px;
+  text-align: center;
+  min-width: 160px;
+}
+
+a:hover {
+ background-color: transparent;
+  color: var(--main-color);
+  border: 2px solid white;
+}
+.table-container {
+    overflow-x: auto;
+    width: 100%;
+}
+
+@media screen and (max-width: 768px) {
+    table {
+        width: 100%;
+        font-size: 14px;
+    }
+
+    th, td {
+        padding: 10px;
+        white-space: nowrap;
+    }
+
+    button {
+        padding: 5px 8px;
+        font-size: 13px;
+    }
+
+    a {
+        padding: 10px 20px;
+        font-size: 14px;
+    }
+}
+
+    </style>
+</head>
+<body>
+    <h1>All Employees</h1>
+
+  <a href="{{ url_for('home') }}">← Back to Dashboard</a>
+
+<!-- Flash Messages -->
+<div class="flash-messages">
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        <ul>
+          {% for category, message in messages %}
+            <li style="color: {% if category == 'error' %}red{% else %}limegreen{% endif %};">
+              {{ message }}
+            </li>
+          {% endfor %}
+        </ul>
+      {% endif %}
+    {% endwith %}
+</div>
+
+{% if employees %}
+    <div class="table-container">
+         <table border="1" cellpadding="5" cellspacing="0">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Name</th> 
+                <th>father_name</th>
+                <th>grand_father_name</th>  <!-- Includes grand father -->
+                <th>Sex</th>
+                <th>Position</th>    <!-- NEW -->
+                <th>employment_status</th> <!-- NEW -->
+                <th>Phone Number</th> 
+                 <th> project</th>    <!-- NEW -->
+                <th>Status</th>
+               
+                <th>Borrowed Materials</th>
+                
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+    {% for emp in employees %}
+<tr>
+    <td>{{ emp.id }}</td>
+   <td>{{ emp.name }}</td>
+   <td> {{ emp.father_name }}</td>
+   <td>{{emp.grand_father_name}} </td> 
+
+    <td>{{ emp.sex }}</td>
+    <td>{{ emp.position or '-' }}</td>  
+    <td>{{ emp.employment_status or '-' }}</td>
+    <td>{{ emp.phone_number or '-' }}</td>
+    <td>{{emp. project}}</td>
+    <td>
+        {% if emp.status == 'Borrowed' %}
+            <strong style="color: red;">{{ emp.status }}</strong>
+        {% else %}
+            <strong style="color: green;">{{ emp.status }}</strong>
+        {% endif %}
+    </td>
+    <td>
+        {% if emp.materials %}
+            <ul>
+                {% for material in emp.materials %}
+                    <li>{{ material }}</li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            -
+        {% endif %}
+    </td>
+    
+    <td>
+        <form action="{{ url_for('approve_leave', emp_id=emp.id) }}" method="post" style="display:inline;">
+            <button type="submit">Approve Leave-Out</button>
+        </form>
+
+        <form action="{{ url_for('add_to_waiting', emp_id=emp.id) }}" method="post" style="display:inline;">
+            <button type="submit">Add to Waiting List</button>
+        </form>
+    </td>
+</tr>
+{% endfor %}
+
+        </tbody>
+    </table>
+    </div>
+   
+{% else %}
+    <p>No employees found.</p>
+{% endif %}
+
+</body>
+</html>

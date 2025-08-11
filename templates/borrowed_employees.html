@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Borrowed Employees</title>
+     <style>
+        body {
+            background: linear-gradient(to right, black, green);
+            font-family: Arial, sans-serif;
+            color: white;
+            margin: 0;
+            padding: 0;
+            text-align: center;
+        }
+
+        h1 {
+            margin-top: 30px;
+            font-size: 36px;
+        }
+
+        a {
+            color: #ffffff;
+            text-decoration: none;
+            font-weight: bold;
+            margin-bottom: 20px;
+            display: inline-block;
+        }
+
+        table {
+            margin: 30px auto;
+            border-collapse: collapse;
+            width: 95%;
+            background-color: white;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.6);
+            border-radius: 12px;
+            overflow: hidden;
+            color: black;
+        }
+
+        th, td {
+            padding: 12px 20px;
+            border-bottom: 1px solid #ddd;
+            text-align: center;
+        }
+
+        th {
+            background-color: #2f4f2f;
+            color: white;
+        }
+
+        tr:hover {
+            background-color: #f2f2f2;
+        }
+
+        ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        li {
+            margin-bottom: 4px;
+        }
+
+        button {
+            padding: 6px 10px;
+            margin: 3px;
+            background-color: green;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            box-shadow: 0 3px 6px rgba(0, 0, 0, 0.3);
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #005700;
+        }
+
+        .flash-messages {
+            margin: 15px auto;
+            width: 80%;
+        }
+
+        .flash-messages ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .flash-messages li {
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        a{
+  display: inline-block;
+  background-color: white;
+  color: black;
+  font-weight: 700;
+  padding: 12px 25px;
+  border-radius: 10px;
+  text-decoration: none;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  margin-top: 20px;
+  text-align: center;
+  min-width: 160px;
+}
+
+a:hover {
+ background-color: transparent;
+  color: var(--main-color);
+  border: 2px solid white;
+}
+a:hover {
+ background-color: transparent;
+  color: var(--main-color);
+  border: 2px solid white;
+}
+.table-container {
+    overflow-x: auto;
+    width: 100%;
+}
+
+@media screen and (max-width: 768px) {
+    table {
+        width: 100%;
+        font-size: 14px;
+    }
+
+    th, td {
+        padding: 10px;
+        white-space: nowrap;
+    }
+
+    button {
+        padding: 5px 8px;
+        font-size: 13px;
+    }
+
+    a {
+        padding: 10px 20px;
+        font-size: 14px;
+    }
+}
+
+
+    </style>
+</head>
+<body>
+    <h1>Employees Who Borrowed Materials</h1>
+    <div class="table-container">
+           <table border="1" cellpadding="5" cellspacing="0">
+        <thead>
+            <tr>
+                <th>Emp ID</th>
+                <th>Name</th>
+                <th>Father Name</th>
+                <th>Grandfather Name</th>
+                <th>Sex</th>
+                <th>Phone</th>
+                <th>Position</th>
+                <th>Employment Status</th>
+                <th>Project</th>
+                <th>Material</th>
+                <th>Serial Number</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in borrowed_list %}
+            <tr>
+                <td>{{ item.id }}</td>
+                <td>{{ item.name }}</td>
+                <td>{{ item.father_name }}</td>
+                <td>{{ item.grand_father_name }}</td>
+                <td>{{ item.sex }}</td>
+                <td>{{ item.phone_number }}</td>
+                <td>{{ item.position }}</td>
+                <td>{{ item.employment_status }}</td>
+                <td>{{ item.project }}</td>
+                <td>{{ item.material_name }}</td>
+                <td>{{ item.serial_number }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    </div>
+    
+
+    <br>
+    <a href="{{ url_for('home') }}">Back to Dashboard</a>
+</body>
+</html>

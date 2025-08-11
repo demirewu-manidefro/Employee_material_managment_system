@@ -1,0 +1,28 @@
+/* 
+:root {
+    --bg-color: #1f242d;
+    --main-color: #7cf03d;
+}
+
+body {
+    background-color: var(--bg-color);
+    color: #f1f1f1;
+}
+
+button {
+    background-color: var(--main-color);
+    color: #000;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 8px;
+    font-weight: bold;
+}
+
+button:hover {
+    background-color: transparent;
+    color: var(--main-color);
+    border: 2px solid var(--main-color);
+    transition: all 0.3s ease;
+    cursor: pointer;
+} */
+

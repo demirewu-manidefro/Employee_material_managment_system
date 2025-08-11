@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Manager Dashboard</title>
+    <style>
+        :root {
+            --bg-color: #1f242d;
+            --main-color: #7cf03d;
+            --text-color: #ffffff;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .container {
+            background-color: #2c303a;
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+            width: 90%;
+            max-width: 1000px;
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 30px;
+            color: var(--main-color);
+            
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 30px;
+        }
+
+        a.button {
+            display: block;
+            background-color: var(--main-color);
+            color: black;
+            text-decoration: none;
+            text-align: center;
+            padding: 15px;
+            border-radius: 12px;
+            font-weight: bold;
+            transition: background 1s ease, transform 0.2s;
+            
+            
+        }
+
+        a.button:hover {
+    background-color: transparent;
+    color: var(--main-color);
+    border: 2px solid var(--main-color);
+    transition: all 0.5s ease;
+    cursor: pointer;
+    box-shadow: 0 0 20px rgba(223, 22, 152, 0.5);
+} 
+
+        .flash {
+            text-align: center;
+            margin-bottom: 20px;
+            color: yellow;
+        }
+        
+    </style>
+</head>
+<body>
+    <div class="container">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                <div class="flash">
+                    {% for category, message in messages %}
+                        <p>{{ message }}</p>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        {% endwith %}
+
+        <h1>Manager Dashboard</h1>
+
+        <div class="grid">
+            <a class="button" href="/add_employee">Add Employee</a>
+            <a class="button" href="/add-material">Add Material</a>
+            <a class="button" href="/borrow">Borrow Material</a>
+            <a class="button" href="/return">Return All Materials</a>
+            <a class="button" href="/return-individual">Return Individual Material</a>
+            <a class="button" href="/employees">View All Employees</a>
+            <a class="button" href="/borrowed-employees">Borrowed Employees Only</a>
+            <a class="button" href="/leave-out">Leave-Out Members</a>
+            <a class="button" href="/waiting-return">Waiting for Return</a>
+            <a class="button" href="/materials">View All Materials</a>
+
+            <a class="button" href="/upload-employees">Upload Employees (CSV/XLSX)</a>
+            <a href="{{ url_for('export_borrowed_and_available') }}" class="button">Export Borrowed Employee to Excel</a>
+            <a class="button" href="{{ url_for('upload_materials') }}">Upload Materials (CSV/XLSX)</a>
+            <a href="{{ url_for('export_waiting_return') }}" class="button">Export Waiting for Return to Excel</a>
+            
+
+
+        </div>
+    </div>
+
+    <script>
+        // Auto-dismiss flash messages after 4 seconds
+        setTimeout(() => {
+            const flash = document.querySelector('.flash');
+            if (flash) flash.style.display = 'none';
+        }, 4000);
+    </script>
+</body>
+</html>
