@@ -18,8 +18,8 @@ print("Templates folder contents:", os.listdir(os.path.join(os.getcwd(), "templa
 
 app = Flask(__name__)
 app.config.from_object(Config)
-app.config['SECRET_KEY'] = os.urandom(24)
 db.init_app(app)
+
 
 # Flask-Login setup
 login_manager = LoginManager()
