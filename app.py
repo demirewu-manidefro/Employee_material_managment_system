@@ -20,6 +20,11 @@ app = Flask(__name__)
 app.config.from_object(Config)
 db.init_app(app)
 
+@app.route('/create-tables')
+def create_tables():
+    from db import db
+    db.create_all()
+    return "✅ Tables created!"
 
 # Flask-Login setup
 login_manager = LoginManager()
