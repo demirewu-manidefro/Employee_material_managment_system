@@ -32,7 +32,7 @@ def create_admin():
         db.session.commit()
         return "✅ Admin user created!"
     return "Admin already exists!"
-"
+
 
 # Flask-Login setup
 login_manager = LoginManager()
