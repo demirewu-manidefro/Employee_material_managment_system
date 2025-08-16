@@ -20,18 +20,6 @@ app = Flask(__name__)
 app.config.from_object(Config)
 db.init_app(app)
 
-@app.route('/create-admin')
-def create_admin():
-    from models import User
-    from db import db
-    from werkzeug.security import generate_password_hash
-
-    if not User.query.filter_by(username='admin').first():
-        admin = User(username='admin', password=generate_password_hash('admin'), role='admin')
-        db.session.add(admin)
-        db.session.commit()
-        return "✅ Admin user created!"
-    return "Admin already exists!"
 
 
 # Flask-Login setup
