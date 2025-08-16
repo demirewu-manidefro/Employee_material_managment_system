@@ -86,7 +86,7 @@ def logout():
     flash("Logged out successfully", "success")
     return redirect(url_for("login"))
 
-from flask_login import login_required, current_user
+
 
 # ---------------- CHANGE PASSWORD ----------------
 @app.route('/change-password', methods=['GET', 'POST'])
@@ -120,18 +120,15 @@ def change_password():
 # ---------------- HOME / ROOT ----------------
 @app.route("/")
 def root():
-    if current_user.is_authenticated:
-        return redirect(url_for("home"))  # already logged in → dashboard
-    else:
-        return redirect(url_for("login"))  # not logged in → login page
-
+    logout_user()  # log out any user visiting the root
+    return redirect(url_for("login"))
 # Dashboard (only for logged-in users)
 @app.route("/home")
 @login_required
 def home():
     return render_template("index.html", user=current_user)
 
-# Add Employee with separate name and father_name fields
+# Add Employee with separatename and father_name fields
 @app.route('/add_employee', methods=['GET', 'POST'])
 def add_employee():
     if request.method == 'POST':
