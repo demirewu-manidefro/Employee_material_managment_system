@@ -4,6 +4,7 @@ from flask_login import LoginManager, login_user, login_required, logout_user, c
 from werkzeug.security import generate_password_hash, check_password_hash
 from db import db
 import os
+from io import BytesIO
 import pandas as pd
 from werkzeug.utils import secure_filename
 import io
@@ -11,7 +12,6 @@ from datetime import datetime
 from config import Config
 from models import User
 
-import os
 print("Current working directory:", os.getcwd())
 print("Templates folder contents:", os.listdir(os.path.join(os.getcwd(), "templates")))
 
@@ -677,6 +677,55 @@ def export_waiting_return():
                      download_name="waiting_for_return.xlsx",
                      as_attachment=True,
                      mimetype='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+@app.route('/export-excel')
+def export_excel():
+   
+
+    employees = Employee.query.all()
+    data = []
+    for emp in employees:
+        borrowed_items = [f"{bm.material.name} ({bm.purpose})" for bm in emp.borrowed_materials if not bm.is_returned]
+        data.append({
+            "Employee Name": emp.name,
+            "Father Name": emp.father_name,
+            "Sex": emp.sex,
+            "Borrowed Materials": ", ".join(borrowed_items) if borrowed_items else "None"
+        })
+
+    df = pd.DataFrame(data)
+    output = BytesIO()
+    df.to_excel(output, index=False, sheet_name="Employees")
+    output.seek(0)
+
+    return send_file(output, as_attachment=True, download_name="employees.xlsx", mimetype="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
+
+
+# ✅ NEW ROUTE for exporting available materials
+@app.route('/export-available-materials')
+def export_available_materials():
+
+    # Get IDs of all borrowed materials
+    borrowed_ids = db.session.query(BorrowedMaterial.material_id).filter_by(is_returned=False).all()
+    borrowed_ids = [id for (id,) in borrowed_ids]
+
+    # Filter available (not borrowed) materials
+    available_materials = Material.query.filter(~Material.id.in_(borrowed_ids)).all()
+
+    data = []
+    for mat in available_materials:
+        data.append({
+            "Material Name": mat.name,
+            "Serial Number": mat.serial_number
+        })
+
+    df = pd.DataFrame(data)
+    output = BytesIO()
+    df.to_excel(output, index=False, sheet_name="Available Materials")
+    output.seek(0)
+
+    return send_file(output, as_attachment=True, download_name="available_materials.xlsx", mimetype="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
+
+
 
 
 
