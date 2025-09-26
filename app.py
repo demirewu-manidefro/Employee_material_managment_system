@@ -201,18 +201,20 @@ def upload_materials():
             flash("No file uploaded.", "error")
             return redirect(url_for('upload_materials'))
 
-        filename = file.filename
+        filename = secure_filename(file.filename)
         if not (filename.endswith('.xlsx') or filename.endswith('.csv')):
             flash("Please upload a .xlsx or .csv file.", "error")
             return redirect(url_for('upload_materials'))
 
         try:
+            # Read the file
             if filename.endswith('.csv'):
                 df = pd.read_csv(file)
             else:
                 df = pd.read_excel(file)
 
-            # Expect columns: name, serial_number
+            added = 0
+            skipped = 0
             for _, row in df.iterrows():
                 name = str(row.get('name', '')).strip()
                 serial = str(row.get('serial_number', '')).strip()
@@ -220,13 +222,20 @@ def upload_materials():
                 if not name or not serial:
                     continue
 
+                # Check if material already exists (by name + serial)
                 exists = Material.query.filter_by(name=name, serial_number=serial).first()
                 if not exists:
+                    # ✅ Always set status='available' when uploading
                     new_material = Material(name=name, serial_number=serial, status='available')
                     db.session.add(new_material)
 
+                    added += 1
+                else:
+                    skipped += 1
+
             db.session.commit()
-            flash("Materials uploaded successfully.", "success")
+            flash(f"Materials uploaded successfully! Added: {added}, Skipped duplicates: {skipped}", "success")
+
         except Exception as e:
             print("Upload error:", e)
             flash("Error uploading materials. Please check the file format.", "error")
@@ -511,12 +520,9 @@ def upload_employees():
 # View all materials with status (new)
 @app.route('/materials')
 def materials():
-    # Only show materials with status 'available' (not borrowed)
-    materials = Material.query.filter_by(status='available').all()
-    for m in materials:
-        m.is_borrowed = False
-    return render_template("materials.html", materials=materials)
-
+    # Show all materials regardless of status
+    all_materials = Material.query.all()
+    return render_template("materials.html", materials=all_materials)
 
 
 # Waiting for return list view (new)
@@ -727,11 +733,6 @@ def export_available_materials():
 
 
 
-
-from db import db
-
-with app.app_context():
-    db.create_all()
 
 
 
