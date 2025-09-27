@@ -197,53 +197,79 @@ def add_material():
 def upload_materials():
     if request.method == 'POST':
         file = request.files.get('excel_file')
-        if not file:
+        if not file or file.filename == '':
             flash("No file uploaded.", "error")
             return redirect(url_for('upload_materials'))
 
         filename = secure_filename(file.filename)
-        if not (filename.endswith('.xlsx') or filename.endswith('.csv')):
+        fname = filename.lower()
+        if not (fname.endswith('.xlsx') or fname.endswith('.csv')):
             flash("Please upload a .xlsx or .csv file.", "error")
             return redirect(url_for('upload_materials'))
 
         try:
-            # Read the file
-            if filename.endswith('.csv'):
-                df = pd.read_csv(file)
+            # Read file into pandas DataFrame (force strings)
+            if fname.endswith('.csv'):
+                df = pd.read_csv(file, dtype=str)
             else:
-                df = pd.read_excel(file)
+                # use openpyxl for .xlsx (make sure openpyxl is installed)
+                df = pd.read_excel(file, engine='openpyxl', dtype=str)
+
+            # Normalize column names to help users who use "Name", "Material Name", "serial no", etc.
+            original_cols = list(df.columns)
+            norm_map = {col: str(col).strip() for col in original_cols}
+            df.rename(columns=norm_map, inplace=True)
+
+            # create lower->orig mapping for lookup
+            lower_map = {str(col).strip().lower().replace(" ", "_"): col for col in df.columns}
+
+            # try to find name and serial columns by common variants
+            name_candidates = ['name', 'material_name', 'material', 'item_name', 'title']
+            serial_candidates = ['serial_number', 'serial', 'serial_no', 'sn', 'serialnumber']
+
+            name_col = next((lower_map[c] for c in name_candidates if c in lower_map), None)
+            serial_col = next((lower_map[c] for c in serial_candidates if c in lower_map), None)
+
+            if not name_col or not serial_col:
+                flash(
+                    "Couldn't find required columns. Expected something like 'name' and 'serial_number' in the file. "
+                    f"Found columns: {', '.join(original_cols)}",
+                    "error"
+                )
+                return redirect(url_for('upload_materials'))
 
             added = 0
             skipped = 0
+            bad_rows = 0
+
             for _, row in df.iterrows():
-                name = str(row.get('name', '')).strip()
-                serial = str(row.get('serial_number', '')).strip()
+                name = str(row.get(name_col, '')).strip() if pd.notna(row.get(name_col, '')) else ''
+                serial = str(row.get(serial_col, '')).strip() if pd.notna(row.get(serial_col, '')) else ''
 
                 if not name or not serial:
+                    bad_rows += 1
                     continue
 
-                # Check if material already exists (by name + serial)
+                # check duplicates by name + serial_number
                 exists = Material.query.filter_by(name=name, serial_number=serial).first()
-                if not exists:
-                    # ✅ Always set status='available' when uploading
+                if exists:
+                    skipped += 1
+                else:
                     new_material = Material(name=name, serial_number=serial, status='available')
                     db.session.add(new_material)
-
                     added += 1
-                else:
-                    skipped += 1
 
             db.session.commit()
-            flash(f"Materials uploaded successfully! Added: {added}, Skipped duplicates: {skipped}", "success")
+            flash(f"Upload complete — Added: {added}, Skipped (duplicates): {skipped}, Bad/Skipped rows (missing fields): {bad_rows}", "success")
+            return redirect(url_for('materials'))  # show materials after upload
 
         except Exception as e:
-            print("Upload error:", e)
-            flash("Error uploading materials. Please check the file format.", "error")
-
-        return redirect(url_for('upload_materials'))
+            # log full traceback to your console and return friendly message to user
+            app.logger.exception("Error uploading materials")
+            flash(f"Error uploading materials: {e}", "error")
+            return redirect(url_for('upload_materials'))
 
     return render_template("upload_materials.html")
-
 
 # Borrow Material (only materials available)
 @app.route('/borrow', methods=['GET', 'POST'])
@@ -424,6 +450,7 @@ def borrowed_employees():
 
 
 # Upload employees via Excel/CSV
+# Upload employees via Excel/CSV
 @app.route('/upload-employees', methods=['GET', 'POST'])
 def upload_employees():
     if request.method == 'POST':
@@ -439,27 +466,34 @@ def upload_employees():
 
         try:
             if filename.endswith('.xlsx'):
-                df = pd.read_excel(file)
+                df = pd.read_excel(file, dtype=str)
             else:
-                df = pd.read_csv(file)
+                df = pd.read_csv(file, dtype=str)
         except Exception as e:
             flash(f"Error reading file: {e}", "error")
             return redirect(request.url)
 
-        added = []
-        skipped = []
+        # ✅ Normalize column names
+        df.columns = [str(c).strip().lower().replace(" ", "_") for c in df.columns]
 
-        for index, row in df.iterrows():
+        # ✅ Allow variations for "position"
+        position_candidates = ['position', 'postion', 'job', 'role', 'job_position']
+        position_col = next((c for c in df.columns if c in position_candidates), None)
+
+        added, skipped = [], []
+
+        for _, row in df.iterrows():
             name = str(row.get('name', '')).strip()
             father_name = str(row.get('father_name', '')).strip()
             grand_father_name = str(row.get('grand_father_name', '')).strip() if 'grand_father_name' in df.columns else ''
             sex = str(row.get('sex', '')).strip()
-            position = str(row.get('position', '')).strip() if 'position' in df.columns else ''
+            position = str(row.get(position_col, '')).strip() if position_col else ''  # ✅ safe mapping
             employment_status = str(row.get('employment_status', '')).strip() if 'employment_status' in df.columns else ''
             phone_number = str(row.get('phone_number', '')).strip() if 'phone_number' in df.columns else ''
             project = str(row.get('project', '')).strip() if 'project' in df.columns else ''
+
+            # Require minimum fields
             if not name or not father_name or not sex or not employment_status or not phone_number:
-                # skip incomplete required data rows
                 continue
 
             exists = Employee.query.filter_by(name=name, father_name=father_name).first()
@@ -475,7 +509,7 @@ def upload_employees():
                     employment_status=employment_status,
                     phone_number=phone_number,
                     status='active',
-                    project = project
+                    project=project
                 )
                 db.session.add(new_emp)
                 added.append(f"{name} {father_name}")
@@ -485,7 +519,6 @@ def upload_employees():
         return redirect(url_for('upload_employees'))
 
     return render_template("upload_employees.html")
-
 
 
 # Export employee data to Excel
@@ -550,11 +583,19 @@ def waiting_return():
 
 
 # Add employee to waiting return list
+# Add employee to waiting return list
 @app.route('/add-to-waiting/<int:emp_id>', methods=['POST'])
 def add_to_waiting(emp_id):
     emp = Employee.query.get_or_404(emp_id)
+
+    # ✅ Check if employee has any borrowed materials not returned
+    borrowed_items = BorrowedMaterial.query.filter_by(employee_id=emp.id, is_returned=False).all()
+    if not borrowed_items:
+        flash(f"Employee '{emp.name} {emp.father_name}' has no borrowed materials. Cannot add to waiting list.", "warning")
+        return redirect(url_for('list_employees'))
+
+    # ✅ Check if already in waiting list
     already_waiting = WaitingReturn.query.filter_by(employee_id=emp.id).first()
-    
     if already_waiting:
         flash(f"Employee '{emp.name} {emp.father_name}' is already in the waiting list.", "error")
     else:
@@ -730,7 +771,6 @@ def export_available_materials():
     output.seek(0)
 
     return send_file(output, as_attachment=True, download_name="available_materials.xlsx", mimetype="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
-
 
 
 
