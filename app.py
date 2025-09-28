@@ -521,41 +521,13 @@ def upload_employees():
     return render_template("upload_employees.html")
 
 
-# Export employee data to Excel
-# @app.route('/export-excel')
-# def export_excel():
-#     employees = Employee.query.all()
-#     data = []
-#     for emp in employees:
-#         borrowings = BorrowedMaterial.query.filter_by(employee_id=emp.id, is_returned=False).all()
-#         materials = ", ".join([f"{Material.query.get(b.material_id).name} (SN: {Material.query.get(b.material_id).serial_number})" for b in borrowings]) if borrowings else "None"
-#         status = "Borrowed" if borrowings else "Not Borrowed"
-#         data.append({
-#             "Employee ID": emp.id,
-#             "Employee Name": f"{emp.name} {emp.father_name}",
-#             "Status": status,
-#             "Borrowed Materials": materials
-#         })
-
-#     df = pd.DataFrame(data)
-
-#     output = io.BytesIO()
-#     with pd.ExcelWriter(output, engine='openpyxl') as writer:
-#         df.to_excel(writer, index=False, sheet_name='Employees')
-#     output.seek(0)
-
-#     return send_file(output,
-#                      download_name="employees_borrowed_materials.xlsx",
-#                      as_attachment=True,
-#                      mimetype='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
-
 
 # View all materials with status (new)
 @app.route('/materials')
 def materials():
-    # Show all materials regardless of status
-    all_materials = Material.query.all()
-    return render_template("materials.html", materials=all_materials)
+    # Only show available materials
+    materials = Material.query.filter_by(status='available').all()
+    return render_template('materials.html', materials=materials)
 
 
 # Waiting for return list view (new)
