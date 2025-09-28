@@ -747,6 +747,26 @@ def export_available_materials():
 
 
 
+from flask import request
+from werkzeug.security import generate_password_hash
+from models import User
+from db import db
+
+@app.route('/set-online-password', methods=['POST'])
+def set_online_password():
+    username = request.form.get('username', 'admin')
+    password = request.form.get('password')
+    if not password:
+        return "Password required", 400
+
+    user = User.query.filter_by(username=username).first()
+    if not user:
+        user = User(username=username)
+        db.session.add(user)
+
+    user.password_hash = generate_password_hash(password)
+    db.session.commit()
+    return "✅ Password set online", 200
 
 
 
