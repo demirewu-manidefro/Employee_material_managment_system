@@ -1,15 +1,23 @@
 import os
+from urllib.parse import urlparse
 
 class Config:
-    # Use DATABASE_URL from environment if available
+# Get DATABASE_URL from environment
     uri = os.environ.get("DATABASE_URL", "postgresql://postgres:ahati21+@localhost:5432/employee_db")
 
-    # Ensure psycopg2 driver and sslmode=require
-    if uri.startswith("postgres://"):
-        uri = uri.replace("postgres://", "postgresql+psycopg2://", 1)
-    elif uri.startswith("postgresql://"):
-        uri = uri.replace("postgresql://", "postgresql+psycopg2://", 1)
 
-    SQLALCHEMY_DATABASE_URI = uri + ("?sslmode=require" if "sslmode" not in uri else "")
+    # Render sets DATABASE_URL without sslmode by default
+    if uri.startswith("postgres://"):
+        uri = uri.replace("postgres://", "postgresql://", 1)
+
+    # Add sslmode=require for production
+    if "render.com" in uri or "sslmode" not in uri:
+        if "?" in uri:
+            uri = f"{uri}&sslmode=require"
+        else:
+            uri = f"{uri}?sslmode=require"
+
+    SQLALCHEMY_DATABASE_URI = uri
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     SECRET_KEY = os.environ.get("SECRET_KEY", "my-secret-key")
+
