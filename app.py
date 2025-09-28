@@ -20,41 +20,6 @@ app = Flask(__name__)
 app.config.from_object(Config)
 db.init_app(app)
 
-from flask import request, render_template_string
-from werkzeug.security import generate_password_hash
-from models import User
-
-SET_PW_TEMPLATE = """
-<!doctype html>
-<title>Set Online Password (ONE-TIME)</title>
-<h2>Set Online Password (ONE-TIME)</h2>
-<form method="post">
-  Username: <input name="username" value="admin"><br><br>
-  Password: <input name="password" type="password"><br><br>
-  <button type="submit">Set Password</button>
-</form>
-<p style="color:darkred"><strong>Warning:</strong> Remove this route immediately after use.</p>
-"""
-
-@app.route('/set-online-password', methods=['GET','POST'])
-def set_online_password_form():
-    if request.method == 'GET':
-        return render_template_string(SET_PW_TEMPLATE)
-    username = request.form.get('username', 'admin')
-    password = request.form.get('password')
-    if not password:
-        return "Password required", 400
-
-    # Create or update user
-    user = User.query.filter_by(username=username).first()
-    if not user:
-        user = User(username=username)
-        db.session.add(user)
-
-    user.password_hash = generate_password_hash(password)
-    db.session.commit()
-    return f"✅ Password set for user '{username}'. Remove this route now.", 200
-
 
 # Flask-Login setup
 login_manager = LoginManager()
@@ -779,6 +744,26 @@ def export_available_materials():
     return send_file(output, as_attachment=True, download_name="available_materials.xlsx", mimetype="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
 
 
+from werkzeug.security import generate_password_hash
+from models import User
+from db import db
+from flask import Flask
+
+@app.route('/create-admin')
+def create_admin():
+    # Check if admin already exists
+    if User.query.filter_by(username='admin').first():
+        return "Admin already exists"
+
+    # Create admin user with hashed password
+    admin = User(
+        username='admin',
+        password=generate_password_hash('123456'),  # Replace with your desired password
+        role='admin'
+    )
+    db.session.add(admin)
+    db.session.commit()
+    return "Admin user created! Remove this route after."
 
 
 
