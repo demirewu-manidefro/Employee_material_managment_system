@@ -19,6 +19,30 @@ print("Templates folder contents:", os.listdir(os.path.join(os.getcwd(), "templa
 app = Flask(__name__)
 app.config.from_object(Config)
 db.init_app(app)
+import os
+import psycopg2
+from urllib.parse import urlparse
+
+@app.route("/ping-db")
+def ping_db():
+    uri = os.getenv("DATABASE_URL", "")
+    # mask credentials for logs/return
+    try:
+        masked = uri
+        if "@" in uri:
+            left, right = uri.split("@", 1)
+            masked = "***@"+ right
+    except Exception:
+        masked = "***"
+
+    try:
+        # Try a direct psycopg2 connect (explicit sslmode too)
+        conn = psycopg2.connect(uri, connect_timeout=5)
+        conn.close()
+        return f"✅ DB connect OK (uri ok? sslmode present: {'sslmode' in uri})."
+    except Exception as e:
+        # return the full error so you can see details in logs/browser
+        return f"❌ DB connect failed. uri={masked} — error: {e}", 500
 
 
 # Flask-Login setup
