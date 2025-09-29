@@ -25,6 +25,29 @@ db.init_app(app)
 login_manager = LoginManager()
 login_manager.init_app(app)
 login_manager.login_view = "login"
+from werkzeug.security import generate_password_hash
+from models import User
+from db import db
+
+@app.route("/create-admin")
+def create_admin():
+    # Change these to your desired credentials
+    username = "admin"
+    password = "admin123"
+    role = "admin"
+
+    # Check if admin already exists
+    existing = User.query.filter_by(username=username).first()
+    if existing:
+        return "⚠️ Admin already exists."
+
+    # Create new admin
+    hashed_pw = generate_password_hash(password, method='pbkdf2:sha256')
+    new_admin = User(username=username, password=hashed_pw, role=role)
+    db.session.add(new_admin)
+    db.session.commit()
+
+    return f"✅ Admin created! Username: {username}, Password: {password}"
 
 @login_manager.user_loader
 def load_user(user_id):
@@ -743,27 +766,6 @@ def export_available_materials():
 
     return send_file(output, as_attachment=True, download_name="available_materials.xlsx", mimetype="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
 
-
-from werkzeug.security import generate_password_hash
-from models import User
-from db import db
-from flask import Flask
-
-@app.route('/create-admin')
-def create_admin():
-    # Check if admin already exists
-    if User.query.filter_by(username='admin').first():
-        return "Admin already exists"
-
-    # Create admin user with hashed password
-    admin = User(
-        username='admin',
-        password=generate_password_hash('123456'),  # Replace with your desired password
-        role='admin'
-    )
-    db.session.add(admin)
-    db.session.commit()
-    return "Admin user created! Remove this route after."
 
 
 
