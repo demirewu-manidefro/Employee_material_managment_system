@@ -4,15 +4,15 @@ import os
 class Config:
     uri = os.getenv("DATABASE_URL", "")
 
-    # Fix accidental double "postgresql://postgresql"
+    # Fix double "postgresql://postgresql"
     if uri.startswith("postgresql://postgresql"):
         uri = uri.replace("postgresql://postgresql", "postgresql://postgres", 1)
 
-    # Convert old "postgres://" to "postgresql://"
+    # Fix old "postgres://" style URLs
     if uri.startswith("postgres://"):
         uri = uri.replace("postgres://", "postgresql://", 1)
 
-    # Force sslmode=require for Render
+    # Always enforce sslmode=require
     if uri and "sslmode" not in uri:
         if "?" in uri:
             uri += "&sslmode=require"
@@ -22,4 +22,3 @@ class Config:
     SQLALCHEMY_DATABASE_URI = uri
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     SECRET_KEY = os.getenv("SECRET_KEY", "your_default_secret")
-
