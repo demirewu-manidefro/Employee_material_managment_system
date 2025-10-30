@@ -5,137 +5,118 @@
 **Program:** Data Science Internship  
 **Duration:** 2 Months  
 **Institution:** Ethiopian Statistics Service (ESS)  
-**Supervisor:** Stotaw (ESS Manager)  
+**Supervisor:** Mr. Stotaw (ESS Manager)  
 **Date:** October 2025  
 
 ---
 
-## 1. Abstract
+## 📘 Abstract
 
-This project, titled **Employee Material Management System**, was developed during a two-month Data Science Internship at the **Ethiopian Statistics Service (ESS)**.
+The **Employee Material Management System (EMMS)** was developed during a two-month Data Science Internship at the **Ethiopian Statistics Service (ESS)**.  
+The system replaces manual, paper-based tracking of office materials with a **digital, web-based solution** that simplifies the management of borrowed, returned, and pending items.
 
-The main goal of the project is to **digitize and simplify the management of office materials**, including tracking of borrowed items, returned materials, and employees who have left or are waiting to return materials.
+Built using **Flask (Python)** for the backend, **PostgreSQL** for the database, and **HTML/CSS (Bootstrap)** for the frontend, the system provides:
+- Real-time tracking of materials  
+- Role-based login (Admin, Supervisor, Viewer)  
+- Data export to Excel  
+- Cloud deployment on **Render**
 
-The system is implemented using **Flask (Python Framework)** for the backend, **PostgreSQL** for the database, and **HTML/CSS (Bootstrap)** for the frontend.  
-The application provides secure **role-based access (Admin, Supervisor, and Viewer)**, data export functionality, and a **clean, responsive user interface**.  
-The project was also deployed on **Render**, demonstrating the intern’s ability to work with online servers and cloud databases.
-
----
-
-## 2. Introduction
-
-The Ethiopian Statistics Service manages a wide range of resources and employees across departments. Traditional paper-based systems for recording the borrowing and returning of materials are **time-consuming**, **error-prone**, and **difficult to monitor**.
-
-To address these issues, the Employee Material Management System was developed to provide a **digital, centralized, and automated** solution for material tracking and employee record management.
+The project demonstrates practical skills in full-stack web development, database design, and system deployment.
 
 ---
 
-## 3. Problem Statement
+## 🎯 Introduction
 
-The manual method of tracking materials in ESS led to several challenges:
-
-- Difficulty in monitoring borrowed and returned items  
-- Loss or duplication of material records  
-- Inability to view available or borrowed materials instantly  
-- Lack of accountability for employees who leave with unreturned items  
-
-Hence, there was a clear need for a **web-based management system** to ensure **transparency, accountability, and efficiency**.
+The Ethiopian Statistics Service (ESS) manages many employees and materials across departments.  
+Previously, these were tracked manually — a process that was **slow, prone to errors, and difficult to monitor**.  
+This project was developed to address these limitations by creating a **centralized, automated, and transparent system**.
 
 ---
 
-## 4. Objectives
+## 🧩 Problem Statement
+
+Manual tracking of office materials at ESS caused:
+- Loss or duplication of records  
+- Difficulty identifying available and borrowed materials  
+- No quick view of employees who left with unreturned items  
+
+The solution: a **web-based management system** to ensure accountability and efficiency.
+
+---
+
+## 🎯 Objectives
 
 ### General Objective
-To develop a **digital system** that automates and simplifies the management of materials and employee records at ESS.
+To develop a digital system that automates and simplifies material and employee record management at ESS.
 
 ### Specific Objectives
-- To store and manage employee and material data efficiently using a relational database.  
-- To enable borrowing and returning of materials with real-time updates.  
-- To implement role-based access control for different system users.  
-- To generate Excel reports and maintain a record of leave-out employees.  
-- To deploy the system on a cloud platform (**Render**) for online access.
+- Store and manage employee and material data using a relational database  
+- Track borrowing and returning of materials in real time  
+- Implement secure role-based access control  
+- Generate Excel reports for administrative use  
+- Deploy the system online using **Render**
 
 ---
 
-## 5. Scope of the Project
+## 🧱 System Overview
 
-The system is designed for **internal use within ESS**. It covers:
+### 🧭 Architecture
+The system follows a **three-tier architecture**:
 
-- Adding and updating employee and material records  
-- Borrowing and returning materials  
-- Viewing available, borrowed, and returned materials  
-- Tracking employees who have left or are waiting to return items  
-- Role-based login and account management  
-- Exporting data to Excel for reporting  
+1. **Frontend (Presentation Layer)**  
+   Built with **HTML, CSS, and Bootstrap**, providing a clean and responsive interface.
 
-> This project focuses on **backend development**, **database design**, and **frontend integration**.  
-> Mobile app support and advanced analytics are considered **outside the current scope**.
+2. **Backend (Application Layer)**  
+   Developed using **Flask**, handling routing, authentication, and business logic.
 
----
+3. **Database (Data Layer)**  
+   Managed with **PostgreSQL** via **SQLAlchemy ORM**, ensuring data integrity.
 
-## 6. System Design & Architecture
-
-The system follows the **three-tier architecture**:
-
-### 1. Presentation Layer (Frontend)
-Built using **HTML, CSS, and Bootstrap**, providing a clean, user-friendly dashboard.
-
-### 2. Application Layer (Backend)
-Developed using **Flask**, managing business logic, authentication, and routing.
-
-### 3. Database Layer
-Uses **PostgreSQL**, managed through **SQLAlchemy ORM**, to handle relationships between Employees, Materials, Borrowed Items, and Leave-Out Members.
-
-**Entity Relationship Overview:**
+### ⚙️ Entity Relationships
 
 
 ---
 
-## 7. Implementation Details
+## ⚒️ Implementation Summary
 
 1. **Database Setup**  
-   Configured PostgreSQL database using SQLAlchemy ORM, defining models for:
-   - Employee  
-   - Material  
-   - BorrowedMaterial  
-   - LeaveOutMember  
+   Defined models for `Employee`, `Material`, `BorrowedMaterial`, and `LeaveOutMember` using SQLAlchemy.
 
-2. **Backend Development**  
-   - Implemented Flask routes for adding, borrowing, returning, and exporting data.  
-   - Added session management and flash messages for user feedback.
+2. **Backend Logic**  
+   Created Flask routes for adding employees/materials, borrowing, returning, and exporting data.  
+   Added validation, flash messages, and session management.
 
-3. **Frontend Design**  
-   - Created HTML templates for all major operations.  
-   - Integrated Bootstrap for responsiveness and consistent styling.
+3. **Frontend Development**  
+   Built dynamic templates for all features.  
+   Used Bootstrap for layout, color scheme, and responsiveness.
 
-4. **Security & Authentication**  
-   - Implemented login and registration with **password hashing**.  
-   - Added **role-based access (Admin, Supervisor, Viewer)** for controlled permissions.
+4. **Authentication & Roles**  
+   Implemented secure login with password hashing and role-based permissions (Admin, Supervisor, Viewer).
 
 5. **Deployment**  
-   - Deployed on **Render**, connecting to a cloud PostgreSQL database.  
-   - Minor online connection issues identified and under review.
+   Deployed on **Render** using an online PostgreSQL database.  
+   Configured environment variables for production.
 
 ---
 
-## 8. Key Features
+## 🌟 Key Features
 
-- ✅ Add and manage employee and material records  
-- ✅ Borrow and return materials (individual or all)  
-- ✅ Track materials by **name and serial number**  
-- ✅ View available and borrowed materials  
-- ✅ “Waiting for Return” list for employees with unreturned items  
-- ✅ Export data to **Excel**  
-- ✅ Role-based login (Admin, Supervisor, Viewer)  
-- ✅ Password change and account management  
-- ✅ Fully responsive and user-friendly interface  
+- Add and manage **employees** and **materials**  
+- Borrow and return materials (individual or all)  
+- Track materials by **name and serial number**  
+- View **available**, **borrowed**, and **returned** materials  
+- Manage a **“Waiting for Return”** list for employees with pending items  
+- Export data to **Excel**  
+- **Role-based login** for Admin, Supervisor, and Viewer  
+- Password change and session security  
+- Fully **responsive interface**
 
 ---
 
-## 9. Tools and Technologies Used
+## 🧰 Tools & Technologies
 
-| **Category** | **Tool / Technology** |
-|---------------|------------------------|
+| Category | Tool / Technology |
+|-----------|-------------------|
 | Programming Language | Python |
 | Framework | Flask |
 | Database | PostgreSQL |
@@ -147,58 +128,65 @@ Uses **PostgreSQL**, managed through **SQLAlchemy ORM**, to handle relationships
 
 ---
 
-## 10. Challenges Faced & Solutions
+## ⚠️ Challenges & Solutions
 
-| **Challenge** | **Description** | **Solution** |
-|----------------|------------------|---------------|
-| Online Database Connection | Render PostgreSQL connection issue | Reconfigure Render environment variables and secure DB URI |
-| Data Consistency | Duplicate or missing borrow records | Implemented validation and “waiting for return” tracking |
-| UI Responsiveness | Layout issues on smaller screens | Used Bootstrap grid system |
-| Role Management | Restricted access based on user type | Added role-based route control and Flask session tracking |
-
----
-
-## 11. Deployment Details
-
-The application was **deployed on Render**, using a connected PostgreSQL cloud database.
-
-**Environment Variables Configured:**
-- `DATABASE_URL`  
-- `SECRET_KEY`
-
-During deployment, minor issues occurred with online database connection.  
-Planned fixes include updating Render’s network settings and ensuring persistent connections in production mode.
+| Challenge | Description | Solution |
+|------------|--------------|-----------|
+| Online Database Connection | Render PostgreSQL connection issue | Reconfigured Render environment variables and secured DB URI |
+| Data Consistency | Duplicate or missing records | Added validation and waiting-list logic |
+| UI Responsiveness | Layout issues on mobile screens | Applied Bootstrap grid and container system |
+| Role Restrictions | Feature access control | Implemented role-based routing with session checks |
 
 ---
 
-## 12. Conclusion and Future Work
+## 🚀 Deployment Details
 
-The **Employee Material Management System** successfully digitalized the manual process of managing materials within ESS.  
-It demonstrated the practical use of **data science and web development** skills in solving real-world administrative problems.
+- **Hosting:** Render  
+- **Database:** Render PostgreSQL (Cloud)  
+- **Environment Variables:**
+  - `DATABASE_URL`
+  - `SECRET_KEY`
 
-### Future Enhancements
-- Integration of **machine learning** for usage prediction.  
-- Generating **automated PDF reports**.  
-- Adding **mobile accessibility**.  
-- Implementing **email notifications** for overdue returns.
-
----
-
-## 13. Acknowledgment
-
-I would like to express my sincere gratitude to **Mr. Stotaw**, my supervisor at ESS, for his continuous support and guidance during my internship.  
-I also thank the **Ethiopian Statistics Service** for providing the opportunity and resources to carry out this project.
+Minor connection issues encountered during testing were resolved by updating Render network settings and verifying persistent connections.
 
 ---
 
-## 14. References
+## ✅ Results & Impact
 
-- [Flask Official Documentation](https://flask.palletsprojects.com/)  
-- [SQLAlchemy ORM Documentation](https://www.sqlalchemy.org/)  
+The system:
+- Eliminated paper-based record issues  
+- Improved accountability for material tracking  
+- Reduced time spent on manual supervision  
+- Made reports instantly available in Excel format  
+
+---
+
+## 🔮 Future Improvements
+
+- Integrate **machine learning** to predict material usage  
+- Generate **PDF reports** automatically  
+- Add **mobile-friendly dashboard** and push notifications  
+- Implement **email reminders** for overdue material returns  
+
+---
+
+## 🙏 Acknowledgment
+
+Special thanks to **Mr. Stotaw**, ESS Manager and Internship Supervisor, for his guidance and support.  
+Gratitude to the **Ethiopian Statistics Service (ESS)** for providing the platform, resources, and mentorship to complete this project successfully.
+
+---
+
+## 📚 References
+
+- [Flask Documentation](https://flask.palletsprojects.com/)  
+- [SQLAlchemy ORM](https://www.sqlalchemy.org/)  
 - [Render Deployment Guide](https://render.com/docs)
 
 ---
 
-📘 **Author:** Demirewu Manidefro  
-🎓 **Data Science Intern | Ethiopian Statistics Service (ESS)**  
-📅 **October 2025**
+## 👨‍💻 Author
+
+**Demirewu Manidefro**  
+_Data Science Intern – Ethiopian Statistics Service (ESS)_  
+📅 October 2025  
