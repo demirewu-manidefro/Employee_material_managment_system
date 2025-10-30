@@ -1,4 +1,4 @@
-#Employee Material Management System
+# 🧾 Employee Material Management System
 
 **Developed for:** Ethiopian Statistics Service (ESS)  
 **Prepared by:** Demirewu Manidefro  
@@ -10,7 +10,7 @@
 
 ---
 
-##Abstract
+## 📘 Abstract
 
 The **Employee Material Management System (EMMS)** was developed during a two-month Data Science Internship at the **Ethiopian Statistics Service (ESS)**.  
 The system replaces manual, paper-based tracking of office materials with a **digital, web-based solution** that simplifies the management of borrowed, returned, and pending items.
@@ -25,7 +25,7 @@ The project demonstrates practical skills in full-stack web development, databas
 
 ---
 
-##Introduction
+## 🎯 Introduction
 
 The Ethiopian Statistics Service (ESS) manages many employees and materials across departments.  
 Previously, these were tracked manually — a process that was **slow, prone to errors, and difficult to monitor**.  
@@ -33,7 +33,7 @@ This project was developed to address these limitations by creating a **centrali
 
 ---
 
-##Problem Statement
+## 🧩 Problem Statement
 
 Manual tracking of office materials at ESS caused:
 - Loss or duplication of records  
@@ -44,7 +44,7 @@ The solution: a **web-based management system** to ensure accountability and eff
 
 ---
 
-##Objectives
+## 🎯 Objectives
 
 ### General Objective
 To develop a digital system that automates and simplifies material and employee record management at ESS.
@@ -58,9 +58,9 @@ To develop a digital system that automates and simplifies material and employee 
 
 ---
 
-##System Overview
+## 🧱 System Overview
 
-###Architecture
+### 🧭 Architecture
 The system follows a **three-tier architecture**:
 
 1. **Frontend (Presentation Layer)**  
@@ -72,12 +72,12 @@ The system follows a **three-tier architecture**:
 3. **Database (Data Layer)**  
    Managed with **PostgreSQL** via **SQLAlchemy ORM**, ensuring data integrity.
 
-###Entity Relationships
+### ⚙️ Entity Relationships
 
 
 ---
 
-##Implementation Summary
+## ⚒️ Implementation Summary
 
 1. **Database Setup**  
    Defined models for `Employee`, `Material`, `BorrowedMaterial`, and `LeaveOutMember` using SQLAlchemy.
@@ -99,7 +99,7 @@ The system follows a **three-tier architecture**:
 
 ---
 
-##Key Features
+## 🌟 Key Features
 
 - Add and manage **employees** and **materials**  
 - Borrow and return materials (individual or all)  
@@ -113,7 +113,7 @@ The system follows a **three-tier architecture**:
 
 ---
 
-##Tools & Technologies
+## 🧰 Tools & Technologies
 
 | Category | Tool / Technology |
 |-----------|-------------------|
@@ -128,7 +128,7 @@ The system follows a **three-tier architecture**:
 
 ---
 
-##Challenges & Solutions
+## ⚠️ Challenges & Solutions
 
 | Challenge | Description | Solution |
 |------------|--------------|-----------|
@@ -139,7 +139,7 @@ The system follows a **three-tier architecture**:
 
 ---
 
-##Deployment Details
+## 🚀 Deployment Details
 
 - **Hosting:** Render  
 - **Database:** Render PostgreSQL (Cloud)  
@@ -151,7 +151,7 @@ Minor connection issues encountered during testing were resolved by updating Ren
 
 ---
 
-##Results & Impact
+## ✅ Results & Impact
 
 The system:
 - Eliminated paper-based record issues  
@@ -161,7 +161,7 @@ The system:
 
 ---
 
-##Future Improvements
+## 🔮 Future Improvements
 
 - Integrate **machine learning** to predict material usage  
 - Generate **PDF reports** automatically  
@@ -170,14 +170,14 @@ The system:
 
 ---
 
-##Acknowledgment
+## 🙏 Acknowledgment
 
 Special thanks to **Mr. Stotaw**, ESS Manager and Internship Supervisor, for his guidance and support.  
 Gratitude to the **Ethiopian Statistics Service (ESS)** for providing the platform, resources, and mentorship to complete this project successfully.
 
 ---
 
-##References
+## 📚 References
 
 - [Flask Documentation](https://flask.palletsprojects.com/)  
 - [SQLAlchemy ORM](https://www.sqlalchemy.org/)  
